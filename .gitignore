@@ -1,0 +1,7 @@
+config/db.php
+.env
+.DS_Store
+*.log
+
+assets/img/uploads/*
+!assets/img/uploads/.gitkeep
