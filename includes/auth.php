@@ -1,19 +1,26 @@
 <?php
 require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/../config/db.php';
 if (session_status() === PHP_SESSION_NONE) {
     session_name('climate_sid');   // separate cookie from your other localhost projects
     session_start();
 }
 
 function current_user(): ?array {
-    if (isset($_SESSION['user_id'], $_SESSION['user_name'], $_SESSION['user_role'])) {
-        return [
-            'id'   => $_SESSION['user_id'],
-            'name' => $_SESSION['user_name'],
-            'role' => $_SESSION['user_role'],
-        ];
+    static $cache = false;
+    if ($cache !== false) return $cache;
+    if (empty($_SESSION['user_id'])) return $cache = null;
+
+    global $pdo;
+    $stmt = $pdo->prepare('SELECT id, full_name, role FROM users WHERE id = ?');
+    $stmt->execute([$_SESSION['user_id']]);
+    $u = $stmt->fetch();
+
+    if (!$u) {                       // stale session, e.g. user deleted
+        $_SESSION = [];
+        return $cache = null;
     }
-    return null;
+    return $cache = ['id' => (int)$u['id'], 'name' => $u['full_name'], 'role' => $u['role']];
 }
 
 function login_user(array $user): void {
