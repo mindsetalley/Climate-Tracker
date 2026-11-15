@@ -22,9 +22,10 @@
   .logo { color: #fff; font-weight: 700; font-size: 1.2rem; }
   .logo span { color: #5be3a1; }
   .logo:hover { text-decoration: none; }
-  nav { display: flex; gap: 20px; }
-  nav a { color: #cfe3d8; font-size: 0.95rem; }
-  nav a.active, nav a:hover { color: #fff; text-decoration: none; }
+  /* after */
+  #mainNav { display: flex; gap: 20px; }
+  #mainNav a { color: #cfe3d8; font-size: 0.95rem; }
+  #mainNav a.active, #mainNav a:hover { color: #fff; text-decoration: none; }
   .nav-toggle { display: none; background: none; border: 0; color: #fff; font-size: 1.5rem; cursor: pointer; }
   
   /* Hero */
@@ -61,8 +62,8 @@
   
   @media (max-width: 760px) {
     .nav-toggle { display: block; }
-    nav { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--dark); flex-direction: column; padding: 16px 20px; }
-    nav.open { display: flex; }
+    #mainNav { display: none; position: absolute; top: 60px; left: 0; right: 0; background: var(--dark); flex-direction: column; padding: 16px 20px; }
+    #mainNav.open { display: flex; }
     .footer-grid { grid-template-columns: 1fr; }
   }
 
@@ -121,4 +122,19 @@
 .featured img { width: 100%; height: 100%; max-height: 300px; object-fit: cover; }
 .featured > div { padding: 24px; }
 .featured h2 a { color: var(--text); }
-@media (max-width: 760px) { .featured { grid-template-columns: 1fr; } }
+@media (max-width: 1024px) {
+  .nav-toggle { display: block; }
+  #mainNav {
+    display: none; position: absolute; top: 60px; left: 0; right: 0;
+    background: var(--dark); flex-direction: column; align-items: flex-start;
+    padding: 16px 20px;
+  }
+  #mainNav.open { display: flex; }
+}
+
+@media (max-width: 760px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
+
+.admin-nav a:hover { color: var(--text); }
+.pager a:hover { background: var(--green); border-color: var(--green); color: #fff; text-decoration: none; }
