@@ -14,6 +14,12 @@ $latest = $pdo->query(
      ORDER BY a.published_at DESC LIMIT 6'
 )->fetchAll();
 
+$spotlight = $pdo->query(
+    "SELECT id, name, scientific_name, category, conservation_status, habitat, image_url
+     FROM species
+     ORDER BY FIELD(conservation_status,'CR','EN','VU','NT','LC','EW','EX'), RAND() LIMIT 4"
+)->fetchAll();
+
 require __DIR__ . '/includes/header.php';
 ?>
 
@@ -54,6 +60,16 @@ require __DIR__ . '/includes/header.php';
   <div id="globePreview" class="globe-box"></div>
     <a class="btn" href="<?= url('tracker.php') ?>">Open full tracker</a>
 </section>
+
+<?php if ($spotlight): ?>
+<section class="container section">
+  <h2>Threatened Species</h2>
+  <div class="species-grid">
+    <?php foreach ($spotlight as $s) include __DIR__ . '/includes/species_card.php'; ?>
+  </div>
+  <p><a href="<?= url('species.php') ?>">See all species →</a></p>
+</section>
+<?php endif; ?>
 
 <section class="container section">
   <h2>Latest Climate News</h2>
