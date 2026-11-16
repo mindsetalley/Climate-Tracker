@@ -102,3 +102,29 @@ function score_level(?int $s): array {
 function event_label(string $type): string {
     return ucfirst(str_replace('_', ' ', $type));
 }
+
+function status_map(): array {
+    // code => [label, background, text colour]
+    return [
+        'LC' => ['Least Concern',        '#2fbf71', '#111'],
+        'NT' => ['Near Threatened',      '#a8d44a', '#111'],
+        'VU' => ['Vulnerable',           '#f2d23c', '#111'],
+        'EN' => ['Endangered',           '#f08a2c', '#111'],
+        'CR' => ['Critically Endangered','#e03b33', '#fff'],
+        'EW' => ['Extinct in the Wild',  '#7a4a9e', '#fff'],
+        'EX' => ['Extinct',              '#3a3a3a', '#fff'],
+    ];
+}
+
+function status_info(string $code): array {
+    return status_map()[$code] ?? [$code, '#9aa5a0', '#111'];
+}
+
+function trend_label(?string $t): string {
+    return ['increasing' => '↑ Increasing', 'stable' => '→ Stable', 'decreasing' => '↓ Decreasing'][$t] ?? 'Unknown';
+}
+
+function category_emoji(string $c): string {
+    return ['mammal' => '🐾', 'bird' => '🐦', 'marine' => '🪸', 'reptile' => '🐢',
+            'amphibian' => '🐸', 'insect' => '🦋', 'plant' => '🌿'][$c] ?? '🌍';
+}
