@@ -10,19 +10,21 @@ function initClimateGlobe(opts) {
       .atmosphereColor('#3fcf8e')
       .atmosphereAltitude(0.18)
       .polygonsTransitionDuration(250)
-      .polygonCapColor(d => (rec(d) ? rec(d).color : '#33443b'))
-      .polygonSideColor(() => 'rgba(0,0,0,0.25)')
+      // 1. polygonCapColor
+      .polygonCapColor(d => (opts.plain ? '#2b4a3a' : rec(d) ? rec(d).color : '#33443b'))      .polygonSideColor(() => 'rgba(0,0,0,0.25)')
       .polygonStrokeColor(d => (d === state.selected ? '#ffffff' : '#0b1a12'))
       .polygonAltitude(d => (d === state.selected ? 0.07 : d === state.hover ? 0.035 : 0.01))
+      // 2. polygonLabel: add this as the first line inside the arrow function
       .polygonLabel(d => {
+        if (opts.plain) return '<b>' + esc(d.properties.ADMIN) + '</b>';
         const r = rec(d);
         const name = esc(r ? r.name : d.properties.ADMIN);
         const info = r ? esc(r.label) + (r.score !== null ? ' · ' + r.score : '') : 'No data yet';
         return '<b>' + name + '</b><br>' + info;
       })
       .onPolygonHover(d => { state.hover = d; refresh(); })
-      .onPolygonClick(d => select(iso(d)));
-  
+      // 3. onPolygonClick
+      .onPolygonClick(d => { if (!opts.plain) select(iso(d)); });  
     g.globeMaterial().color.set('#0f2a3d');
     g.controls().autoRotate = opts.autoRotate !== false;
     g.controls().autoRotateSpeed = 0.5;
