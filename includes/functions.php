@@ -88,3 +88,17 @@ function handle_upload(array $file, array &$errors): ?string {
     }
     return UPLOAD_PREFIX . $name;
 }
+
+// Maps a 0-100 impact score to [label, colour]. Same bands as the plan.
+function score_level(?int $s): array {
+    if ($s === null) return ['No data', '#9aa5a0'];
+    if ($s <= 20)    return ['Low',       '#2fbf71'];
+    if ($s <= 40)    return ['Moderate',  '#a8d44a'];
+    if ($s <= 60)    return ['Elevated',  '#f2d23c'];
+    if ($s <= 80)    return ['High',      '#f08a2c'];
+    return                  ['Very High', '#e03b33'];
+}
+
+function event_label(string $type): string {
+    return ucfirst(str_replace('_', ' ', $type));
+}
