@@ -51,8 +51,8 @@ require __DIR__ . '/includes/header.php';
 
 <section class="container section globe-teaser">
   <h2>Interactive Globe</h2>
-  <div id="globePreview" class="globe-placeholder">Globe goes here (Step 7)</div>
-  <a class="btn" href="<?= url('tracker.php') ?>">Open full tracker</a>
+  <div id="globePreview" class="globe-box"></div>
+    <a class="btn" href="<?= url('tracker.php') ?>">Open full tracker</a>
 </section>
 
 <section class="container section">
@@ -77,5 +77,17 @@ require __DIR__ . '/includes/header.php';
     </div>
   <?php endif; ?>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/globe.gl@2.27.2/dist/globe.gl.min.js"></script>
+<script src="<?= url('assets/js/globe.js') ?>"></script>
+<script>
+  initClimateGlobe({
+    el: document.getElementById('globePreview'),
+    geoUrl: <?= json_encode(url('assets/data/countries.geojson')) ?>,
+    apiUrl: <?= json_encode(url('api/countries.php')) ?>,
+    zoom: false,   // don't hijack page scrolling
+    onSelect: code => { location.href = <?= json_encode(url('tracker.php?country=')) ?> + code; }
+  });
+</script>
 
 <?php require __DIR__ . '/includes/footer.php'; ?>
