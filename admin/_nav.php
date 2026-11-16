@@ -3,5 +3,6 @@
   <a href="<?= url('admin/articles.php') ?>">Articles</a>
   <a href="<?= url('admin/article_form.php') ?>">+ New article</a>
   <a href="<?= url('admin/categories.php') ?>">Categories</a>
+  <a href="<?= url('admin/countries.php') ?>">Countries</a>
 </nav>
 <?php if ($msg = get_flash()): ?><div class="flash"><?= e($msg) ?></div><?php endif; ?>
