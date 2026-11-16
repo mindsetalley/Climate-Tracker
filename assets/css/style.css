@@ -171,3 +171,18 @@
   .tracker-grid { grid-template-columns: 1fr; }
   .globe-box.tall { height: 400px; }
 }
+
+/* Species */
+.filters { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
+.filters input { flex: 1; min-width: 180px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; }
+.filters select { padding: 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; background: #fff; }
+.filters .btn { border: 0; cursor: pointer; }
+.species-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+.sp-card { display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; color: var(--text); }
+.sp-card:hover { border-color: var(--green); text-decoration: none; }
+.sp-img { height: 140px; background: linear-gradient(135deg, #e3f3ea, #cfe6d9); display: grid; place-items: center; font-size: 3rem; overflow: hidden; }
+.sp-img img { width: 100%; height: 100%; object-fit: cover; }
+.sp-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+.sp-body em, .sp-body small { color: var(--muted); font-size: 0.85rem; }
+.species-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 12px; }
+@media (max-width: 860px) { .species-detail { grid-template-columns: 1fr; } }
