@@ -44,6 +44,6 @@ require __DIR__ . '/includes/header.php';
   };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.27.2/dist/globe.gl.min.js"></script>
-<script src="<?= url('assets/js/globe.js') ?>"></script>
-<script src="<?= url('assets/js/tracker.js') ?>"></script>
+<script src="<?= url('assets/js/globe.js') ?>?v=<?= filemtime(__DIR__ . '/assets/js/globe.js') ?>"></script>
+<script src="<?= url('assets/js/tracker.js') ?>?v=<?= filemtime(__DIR__ . '/assets/js/tracker.js') ?>"></script>
 <?php require __DIR__ . '/includes/footer.php'; ?>
