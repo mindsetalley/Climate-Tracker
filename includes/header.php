@@ -10,8 +10,7 @@ $user = current_user();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= e($pageTitle) ?> | Climate Tracker</title>
-  <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>">
-</head>
+  <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>?v=<?= filemtime(__DIR__ . '/../assets/css/style.css') ?>"></head>
 <body>
 <header class="site-header">
   <div class="container nav-wrap">
