@@ -90,7 +90,7 @@ require __DIR__ . '/includes/header.php';
 
 <?php if ($breakdown): ?>
     <h2>What drives the score</h2>
-    <div class="card">
+    <div class="card panel">
       <?php foreach ($parts as $key => $label): if (!isset($breakdown[$key])) continue; $v = round((float)$breakdown[$key], 1); ?>
         <div class="part">
           <span><?= e($label) ?></span>
