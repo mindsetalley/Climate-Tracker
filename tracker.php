@@ -32,6 +32,7 @@ require __DIR__ . '/includes/header.php';
     <span style="--c:#33443b">No data yet</span>
   </div>
   <p class="note">Scores are currently placeholders. The Climate Impact and Vulnerability Index methodology will be published here once it's built.</p>
+  <p class="note">Small island states and microstates that are too small for the map outline appear as coloured dots.</p>
 </section>
 
 <script>
