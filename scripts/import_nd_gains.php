@@ -9,11 +9,24 @@ if (!$raw) exit("Folder data/raw/nd-gain not found.\n");
 
 // indicator => file path inside data/raw/nd-gain (missing files are skipped)
 $files = [
-    'nd_gain_index'         => 'gain/gain.csv',
-    'nd_gain_vulnerability' => 'vulnerability/vulnerability.csv',
-    'nd_gain_readiness'     => 'readiness/readiness.csv',
+    'nd_gain_index'          => 'gain/gain.csv',
+    'nd_gain_vulnerability'  => 'vulnerability/vulnerability.csv',
+    'nd_gain_readiness'      => 'readiness/readiness.csv',
+    // vulnerability components
+    'nd_gain_exposure'       => 'vulnerability/exposure.csv',
+    'nd_gain_sensitivity'    => 'vulnerability/sensitivity.csv',
+    'nd_gain_capacity'       => 'vulnerability/capacity.csv',
+    // vulnerability sectors
+    'nd_gain_food'           => 'vulnerability/food.csv',
+    'nd_gain_health'         => 'vulnerability/health.csv',
+    'nd_gain_ecosystems'     => 'vulnerability/ecosystems.csv',
+    'nd_gain_habitat'        => 'vulnerability/habitat.csv',
+    'nd_gain_infrastructure' => 'vulnerability/infrastructure.csv',
+    // readiness components
+    'nd_gain_economic'       => 'readiness/economic.csv',
+    'nd_gain_governance'     => 'readiness/governance.csv',
+    'nd_gain_social'         => 'readiness/social.csv',
 ];
-
 function read_series(string $path): array {
     $text  = preg_replace('/^\xEF\xBB\xBF/', '', (string)file_get_contents($path));
     $lines = preg_split('/\r\n|\r|\n/', $text, -1, PREG_SPLIT_NO_EMPTY);
