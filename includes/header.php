@@ -21,6 +21,7 @@ $user = current_user();
       <a href="<?= url('news.php') ?>">News</a>
       <a href="<?= url('tracker.php') ?>">Climate Tracker</a>
       <a href="<?= url('countries.php') ?>">Countries</a>
+      <a href="<?= url('compare.php') ?>">Compare</a>
       <a href="<?= url('species.php') ?>">Species</a>
       <a href="<?= url('about.php') ?>">About</a>
       <?php if ($user): ?>
