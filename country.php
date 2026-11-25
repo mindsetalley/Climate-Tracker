@@ -26,8 +26,7 @@ foreach ($stmt as $r) {
 $parts = [
     'nd_gain_exposure'       => 'Exposure',
     'nd_gain_sensitivity'    => 'Sensitivity',
-    'nd_gain_capacity'       => 'Adaptive capacity',
-    'nd_gain_food'           => 'Food',
+    'nd_gain_capacity'       => 'Low adaptive capacity',    'nd_gain_food'           => 'Food',
     'nd_gain_health'         => 'Health',
     'nd_gain_ecosystems'     => 'Ecosystems',
     'nd_gain_habitat'        => 'Human habitat',
@@ -97,8 +96,7 @@ require __DIR__ . '/includes/header.php';
           <strong><?= $v ?></strong>
         </div>
       <?php endforeach; ?>
-      <p class="note">ND-GAIN components for the latest year, 0–100. Exposure is how strongly the country is hit by hazards, sensitivity is how much its people and systems depend on what is hit, and adaptive capacity is its ability to cope. Sector rows show the same score for each life-supporting sector.</p>
-    </div>
+      <p class="note">ND-GAIN components for the latest year, 0–100. For every bar, <strong>higher means more vulnerable</strong>. Exposure is how strongly the country is hit by hazards, sensitivity is how much its people and systems depend on what is hit, and low adaptive capacity is a limited ability to cope and recover. Sector rows give the same score for each life-supporting sector.</p>    </div>
   <?php endif; ?>
 
 <?php if (!$series): ?><p class="mute">No indicator data available for this country.</p><?php endif; ?>
