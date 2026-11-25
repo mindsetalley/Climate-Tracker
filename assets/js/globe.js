@@ -1,6 +1,6 @@
 function initClimateGlobe(opts) {
     const el = opts.el;
-    const state = { data: {}, features: {}, hover: null, selected: null };
+    const state = { data: {}, features: {}, hover: null, selected: null, selectedCode: null };
     const iso = d => d.properties.ADM0_A3;
     const rec = d => state.data[iso(d)];
     const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -43,13 +43,15 @@ function initClimateGlobe(opts) {
   
     function select(code) {
       const f = state.features[code];
-      if (!f) return;
-      state.selected = f;
-      refresh();
       const r = state.data[code];
+      if (!f && !r) return;
+      state.selected = f || null;
+      state.selectedCode = code;
+      refresh();
+      if (!opts.plain) { g.pointAltitude(g.pointAltitude()); g.pointRadius(g.pointRadius()); }
       g.controls().autoRotate = false;
-      if (r && r.lat !== null) g.pointOfView({ lat: r.lat, lng: r.lng, altitude: 1.6 }, 900);
-      if (opts.onSelect) opts.onSelect(code, r, f.properties.ADMIN);
+      if (r && r.lat !== null) g.pointOfView({ lat: r.lat, lng: r.lng, altitude: f ? 1.6 : 1.2 }, 900);
+      if (opts.onSelect) opts.onSelect(code, r, f ? f.properties.ADMIN : (r ? r.name : code));
     }
   
     const ready = Promise.all([
@@ -59,6 +61,17 @@ function initClimateGlobe(opts) {
       state.data = data;
       geo.features.forEach(f => { state.features[iso(f)] = f; });
       g.polygonsData(geo.features);
+      if (!opts.plain) {
+        const extra = Object.entries(data)
+          .filter(([code, r]) => !state.features[code] && r.lat !== null)
+          .map(([code, r]) => Object.assign({ code }, r));
+        g.pointsData(extra).pointLat('lat').pointLng('lng')
+          .pointColor(d => d.color)
+          .pointAltitude(d => (d.code === state.selectedCode ? 0.06 : 0.02))
+          .pointRadius(d => (d.code === state.selectedCode ? 0.9 : 0.55))
+          .pointLabel(d => '<b>' + esc(d.name) + '</b><br>' + esc(d.label) + (d.score !== null ? ' · ' + d.score : ''))
+          .onPointClick(d => select(d.code));
+      }
       return data;
     }).catch(err => {
       console.error(err);
