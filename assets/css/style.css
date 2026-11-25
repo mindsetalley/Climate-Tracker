@@ -211,3 +211,8 @@
 
 /* Dashboard card padding */
 .score-card, .chart-grid .card, .panel { padding: 18px; }
+
+/* Compare */
+.cmp td:first-child { font-weight: 600; }
+.cmp th, .cmp td { min-width: 130px; }
+.filters + .note, .filters + .table-wrap { margin-top: 8px; }
