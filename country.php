@@ -86,6 +86,21 @@ require __DIR__ . '/includes/header.php';
     <div class="card"><h3><?= e($title) ?></h3><canvas id="chart-<?= e($key) ?>"></canvas></div>
   <?php endforeach; ?>
 </div>
+
+<?php if ($breakdown): ?>
+    <h2>What drives the score</h2>
+    <div class="card">
+      <?php foreach ($parts as $key => $label): if (!isset($breakdown[$key])) continue; $v = round((float)$breakdown[$key], 1); ?>
+        <div class="part">
+          <span><?= e($label) ?></span>
+          <div class="bar"><i style="width:<?= $v ?>%;background:#e0793a"></i></div>
+          <strong><?= $v ?></strong>
+        </div>
+      <?php endforeach; ?>
+      <p class="note">ND-GAIN components for the latest year, 0–100. Exposure is how strongly the country is hit by hazards, sensitivity is how much its people and systems depend on what is hit, and adaptive capacity is its ability to cope. Sector rows show the same score for each life-supporting sector.</p>
+    </div>
+  <?php endif; ?>
+
 <?php if (!$series): ?><p class="mute">No indicator data available for this country.</p><?php endif; ?>
 
   <h2>Documented climate events</h2>
