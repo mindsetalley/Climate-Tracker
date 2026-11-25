@@ -17,6 +17,12 @@ require __DIR__ . '/includes/header.php';
     <datalist id="countryList"></datalist>
   </div>
 
+  <div id="yearBox" class="year-box" hidden>
+    <button type="button" id="playBtn" class="btn" aria-label="Play timeline">▶</button>
+    <input type="range" id="yearSlider" min="1995" max="2024" step="1" value="2024" aria-label="Year">
+    <strong id="yearLabel">2024</strong>
+  </div>
+
   <div class="tracker-grid">
     <div id="globe" class="globe-box tall"></div>
     <aside class="card" id="panel">
@@ -33,6 +39,7 @@ require __DIR__ . '/includes/header.php';
   </div>
   <p class="note">Scores are currently placeholders. The Climate Impact and Vulnerability Index methodology will be published here once it's built.</p>
   <p class="note">Small island states and microstates that are too small for the map outline appear as coloured dots.</p>
+  <p class="note">The year slider uses one fixed colour scale (set by the latest year) so colours are comparable across years. Years before 2024 can be clipped at the ends of the scale.</p>
 </section>
 
 <script>
@@ -40,7 +47,8 @@ require __DIR__ . '/includes/header.php';
     geo: <?= json_encode(url('assets/data/countries.geojson')) ?>,
     api: <?= json_encode(url('api/countries.php')) ?>,
     countryUrl: <?= json_encode(url('country.php?iso=')) ?>,
-    preselect: <?= json_encode($preselect) ?>
+    preselect: <?= json_encode($preselect) ?>,
+    scores: <?= json_encode(url('api/scores.php')) ?>
   };
 </script>
 <script src="https://cdn.jsdelivr.net/npm/globe.gl@2.27.2/dist/globe.gl.min.js"></script>
