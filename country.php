@@ -15,7 +15,7 @@ $cid = (int)$country['id'];
 // Time series, grouped by indicator
 $stmt = $pdo->prepare(
     "SELECT indicator, year, value FROM climate_data
-    WHERE country_id = ? AND indicator IN ('nd_gain_index','nd_gain_vulnerability','nd_gain_readiness') ORDER BY year");
+    WHERE country_id = ? AND indicator IN ('avg_temp_c','rainfall_mm','nd_gain_index','nd_gain_vulnerability','nd_gain_readiness') ORDER BY year");
 $stmt->execute([$cid]);
 $series = [];
 foreach ($stmt as $r) {
@@ -42,6 +42,8 @@ $stmt->execute([$cid, ...array_keys($parts), $cid]);
 $breakdown = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
 
 $charts = [
+    'avg_temp_c'            => ['Average annual temperature (°C)', '#d9534f'],
+    'rainfall_mm'           => ['Annual rainfall (mm)', '#2a9d8f'],
     'nd_gain_vulnerability' => ['Vulnerability (lower = less vulnerable)', '#e0793a'],
     'nd_gain_readiness'     => ['Readiness to adapt (higher = more ready)', '#2f7fc1'],
     'nd_gain_index'         => ['ND-GAIN Index (higher = better prepared)', '#1f8a5b'],
@@ -100,6 +102,9 @@ require __DIR__ . '/includes/header.php';
   <?php endif; ?>
 
 <?php if (!$series): ?><p class="mute">No indicator data available for this country.</p><?php endif; ?>
+  <?php if (isset($series['avg_temp_c']) || isset($series['rainfall_mm'])): ?>
+    <p class="note">Temperature and rainfall are national averages from the CRU TS4.10 gridded dataset, as published by the World Bank Climate Change Knowledge Portal, shown from 1950. Rainfall is interpolated from weather stations and is less reliable than temperature, especially for small countries and regions with few stations.</p>
+  <?php endif; ?>
 
   <h2>Documented climate events</h2>
   <?php if (!$events): ?>
@@ -133,8 +138,7 @@ const series = <?= json_encode($series, JSON_HEX_TAG | JSON_HEX_AMP) ?>;
 const meta = <?= json_encode(array_map(fn($c) => ['color' => $c[1]], $charts)) ?>;
 Object.entries(series).forEach(([key, s]) => {
   new Chart(document.getElementById('chart-' + key), {
-    type: 'line',
-    data: { labels: s.labels, datasets: [{ data: s.values, borderColor: meta[key].color, backgroundColor: meta[key].color + '33', fill: true, tension: 0.3, pointRadius: 2 }] },
+    type: key === 'rainfall_mm' ? 'bar' : 'line',    data: { labels: s.labels, datasets: [{ data: s.values, borderColor: meta[key].color, backgroundColor: meta[key].color + '33', fill: true, tension: 0.3, pointRadius: 2 }] },
     options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { maxTicksLimit: 8 } } } }
   });
 });
