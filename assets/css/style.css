@@ -196,10 +196,11 @@
 .note-box { background: #fff8e1; border-color: #f0dc9a; margin: 12px 0; }
 .about-legend { margin: 8px 0 16px; }
 
-.part { display: grid; grid-template-columns: 130px 1fr 44px; gap: 12px; align-items: center; margin-bottom: 6px; }
+/* Score breakdown rows: label | bar | value */
+.part { display: grid; grid-template-columns: 150px 1fr 48px; gap: 12px; align-items: center; margin-bottom: 8px; }
 .part .bar { margin: 0; }
 .part strong { text-align: right; font-size: 0.9rem; }
-@media (max-width: 560px) { .part { grid-template-columns: 100px 1fr 40px; } }
+@media (max-width: 560px) { .part { grid-template-columns: 110px 1fr 40px; } }
 
 /* Year slider */
 .year-box { display: flex; align-items: center; gap: 14px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 16px; margin-bottom: 14px; }
@@ -207,3 +208,6 @@
 .year-box .btn { border: 0; cursor: pointer; padding: 6px 14px; line-height: 1; }
 .year-box input[type=range] { flex: 1; accent-color: var(--green); }
 .year-box strong { min-width: 3.2ch; font-variant-numeric: tabular-nums; }
+
+/* Dashboard card padding */
+.score-card, .chart-grid .card, .panel { padding: 18px; }
