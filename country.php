@@ -78,7 +78,8 @@ require __DIR__ . '/includes/header.php';
       <p class="note">ND-GAIN vulnerability, scaled 0–100 across countries<?= $country['score_year'] ? ' (' . (int)$country['score_year'] . ')' : '' ?>. Higher = more vulnerable. 0 is the least vulnerable country in the dataset and 100 the most.</p>    </div>
     <div>
       <?= $country['summary'] ? '<p>' . e($country['summary']) . '</p>' : '<p class="mute">No summary written yet.</p>' ?>
-      <a href="<?= url('tracker.php?country=' . urlencode($country['iso_a3'])) ?>">View on the globe →</a>
+      <a href="<?= url('tracker.php?country=' . urlencode($country['iso_a3'])) ?>">View on the globe →</a><br>
+      <a href="<?= url('compare.php?c[]=' . urlencode($country['iso_a3'])) ?>">Compare with another country →</a>
     </div>
   </div>
 
