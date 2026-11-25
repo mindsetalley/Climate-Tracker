@@ -15,14 +15,38 @@ $cid = (int)$country['id'];
 // Time series, grouped by indicator
 $stmt = $pdo->prepare(
     "SELECT indicator, year, value FROM climate_data
-     WHERE country_id = ? AND indicator IN ('avg_temp_c','rainfall_mm') ORDER BY year"
-);
+    WHERE country_id = ? AND indicator IN ('nd_gain_index','nd_gain_vulnerability','nd_gain_readiness') ORDER BY year");
 $stmt->execute([$cid]);
 $series = [];
 foreach ($stmt as $r) {
     $series[$r['indicator']]['labels'][] = (int)$r['year'];
     $series[$r['indicator']]['values'][] = (float)$r['value'];
 }
+
+$parts = [
+    'nd_gain_exposure'       => 'Exposure',
+    'nd_gain_sensitivity'    => 'Sensitivity',
+    'nd_gain_capacity'       => 'Adaptive capacity',
+    'nd_gain_food'           => 'Food',
+    'nd_gain_health'         => 'Health',
+    'nd_gain_ecosystems'     => 'Ecosystems',
+    'nd_gain_habitat'        => 'Human habitat',
+    'nd_gain_infrastructure' => 'Infrastructure',
+];
+$ph = implode(',', array_fill(0, count($parts), '?'));
+$stmt = $pdo->prepare(
+    "SELECT indicator, value FROM climate_data
+     WHERE country_id = ? AND indicator IN ($ph)
+       AND year = (SELECT MAX(year) FROM climate_data WHERE country_id = ? AND indicator = 'nd_gain_vulnerability')"
+);
+$stmt->execute([$cid, ...array_keys($parts), $cid]);
+$breakdown = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+
+$charts = [
+    'nd_gain_vulnerability' => ['Vulnerability (lower = less vulnerable)', '#e0793a'],
+    'nd_gain_readiness'     => ['Readiness to adapt (higher = more ready)', '#2f7fc1'],
+    'nd_gain_index'         => ['ND-GAIN Index (higher = better prepared)', '#1f8a5b'],
+];
 
 $stmt = $pdo->prepare('SELECT event_type, event_date, description FROM climate_events WHERE country_id = ? ORDER BY event_date DESC');
 $stmt->execute([$cid]);
@@ -50,8 +74,7 @@ require __DIR__ . '/includes/header.php';
         <div class="big"><?= $score ?><small> / 100</small></div>
         <div class="bar"><i style="width:<?= $score ?>%;background:<?= $color ?>"></i></div>
       <?php endif; ?>
-      <p class="note">Climate Impact and Vulnerability Index. Scores are currently placeholders until the index methodology is built.</p>
-    </div>
+      <p class="note">ND-GAIN vulnerability, scaled 0–100 across countries<?= $country['score_year'] ? ' (' . (int)$country['score_year'] . ')' : '' ?>. Higher = more vulnerable. 0 is the least vulnerable country in the dataset and 100 the most.</p>    </div>
     <div>
       <?= $country['summary'] ? '<p>' . e($country['summary']) . '</p>' : '<p class="mute">No summary written yet.</p>' ?>
       <a href="<?= url('tracker.php?country=' . urlencode($country['iso_a3'])) ?>">View on the globe →</a>
@@ -59,11 +82,11 @@ require __DIR__ . '/includes/header.php';
   </div>
 
   <div class="chart-grid">
-    <div class="card"><h3>Average temperature (°C)</h3>
-      <?= isset($series['avg_temp_c']) ? '<canvas id="tempChart"></canvas>' : '<p class="mute">No data available.</p>' ?></div>
-    <div class="card"><h3>Annual rainfall (mm)</h3>
-      <?= isset($series['rainfall_mm']) ? '<canvas id="rainChart"></canvas>' : '<p class="mute">No data available.</p>' ?></div>
-  </div>
+  <?php foreach ($charts as $key => [$title, $col]): if (!isset($series[$key])) continue; ?>
+    <div class="card"><h3><?= e($title) ?></h3><canvas id="chart-<?= e($key) ?>"></canvas></div>
+  <?php endforeach; ?>
+</div>
+<?php if (!$series): ?><p class="mute">No indicator data available for this country.</p><?php endif; ?>
 
   <h2>Documented climate events</h2>
   <?php if (!$events): ?>
@@ -93,18 +116,14 @@ require __DIR__ . '/includes/header.php';
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.js"></script>
 <script>
-const temp = <?= json_encode($series['avg_temp_c'] ?? null, JSON_HEX_TAG | JSON_HEX_AMP) ?>;
-const rain = <?= json_encode($series['rainfall_mm'] ?? null, JSON_HEX_TAG | JSON_HEX_AMP) ?>;
-
-function draw(id, data, type, label, color) {
-  if (!data) return;
-  new Chart(document.getElementById(id), {
-    type,
-    data: { labels: data.labels, datasets: [{ label, data: data.values, borderColor: color, backgroundColor: color + '99', tension: 0.3, pointRadius: 2 }] },
+const series = <?= json_encode($series, JSON_HEX_TAG | JSON_HEX_AMP) ?>;
+const meta = <?= json_encode(array_map(fn($c) => ['color' => $c[1]], $charts)) ?>;
+Object.entries(series).forEach(([key, s]) => {
+  new Chart(document.getElementById('chart-' + key), {
+    type: 'line',
+    data: { labels: s.labels, datasets: [{ data: s.values, borderColor: meta[key].color, backgroundColor: meta[key].color + '33', fill: true, tension: 0.3, pointRadius: 2 }] },
     options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { maxTicksLimit: 8 } } } }
   });
-}
-draw('tempChart', temp, 'line', '°C', '#e0793a');
-draw('rainChart', rain, 'bar', 'mm', '#2f7fc1');
+});
 </script>
 <?php require __DIR__ . '/includes/footer.php'; ?>
