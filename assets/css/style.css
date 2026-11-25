@@ -200,3 +200,10 @@
 .part .bar { margin: 0; }
 .part strong { text-align: right; font-size: 0.9rem; }
 @media (max-width: 560px) { .part { grid-template-columns: 100px 1fr 40px; } }
+
+/* Year slider */
+.year-box { display: flex; align-items: center; gap: 14px; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 10px 16px; margin-bottom: 14px; }
+.year-box[hidden] { display: none; }
+.year-box .btn { border: 0; cursor: pointer; padding: 6px 14px; line-height: 1; }
+.year-box input[type=range] { flex: 1; accent-color: var(--green); }
+.year-box strong { min-width: 3.2ch; font-variant-numeric: tabular-nums; }
