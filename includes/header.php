@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/auth.php';
 $pageTitle = $pageTitle ?? 'Global Climate Change Tracker';
+$metaDesc = $metaDesc ?? 'Explore how climate change affects countries and species worldwide, with an interactive 3D globe, real vulnerability data and climate news.';
 $current = basename($_SERVER['SCRIPT_NAME']);
 $user = current_user();
 ?>
