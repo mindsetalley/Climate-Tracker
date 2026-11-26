@@ -6,6 +6,7 @@ $preselect = strtoupper(preg_replace('/[^A-Za-z]/', '', $_GET['country'] ?? ''))
 $bands = [[0, 20], [21, 40], [41, 60], [61, 80], [81, 100]];
 
 $pageTitle = 'Climate Tracker';
+$metaDesc = 'Rotate the 3D globe and explore climate vulnerability by country, from 1995 to 2024.';
 require __DIR__ . '/includes/header.php';
 ?>
 <section class="container section">
