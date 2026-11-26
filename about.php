@@ -32,7 +32,7 @@ require __DIR__ . '/includes/header.php';
   <h2 id="methodology">Methodology</h2>
   <p>The globe colours each country by a 0–100 <strong>Climate Impact and Vulnerability</strong> score, from green (low) to red (very high).</p>
 <div class="card note-box">
-<strong>How the score works:</strong> each country's score is its ND-GAIN vulnerability value for the latest year with broad coverage, scaled so the least vulnerable country in the dataset is 0 and the most vulnerable is 100. It shows vulnerability relative to other countries, not an absolute measure. Species data and the homepage climate statistics are still sample content.
+<strong>How the score works:</strong> each country's score is its ND-GAIN vulnerability value for the latest year with broad coverage, scaled so the least vulnerable country in the dataset is 0 and the most vulnerable is 100. It shows vulnerability relative to other countries, not an absolute measure. Species entries and the seed articles are still sample content.
 </div>
 
   <h3>Exposure, vulnerability and damage are different things</h3>
