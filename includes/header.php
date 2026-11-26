@@ -11,13 +11,18 @@ $user = current_user();
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= e($pageTitle) ?> | Climate Tracker</title>
+  <meta name="description" content="<?= e($metaDesc) ?>">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="<?= e($pageTitle) ?> | Climate Tracker">
+  <meta property="og:description" content="<?= e($metaDesc) ?>">
   <link rel="stylesheet" href="<?= url('assets/css/style.css') ?>?v=<?= filemtime(__DIR__ . '/../assets/css/style.css') ?>"></head>
 <body>
+<body>
+<a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="container nav-wrap">
     <a href="<?= url() ?>" class="logo">🌍 Climate<span>Tracker</span></a>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">☰</button>
-    <nav id="mainNav">
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-controls="mainNav" aria-expanded="false">☰</button>    <nav id="mainNav">
       <a href="<?= url() ?>" class="<?= $current === 'index.php' ? 'active' : '' ?>">Home</a>
       <a href="<?= url('news.php') ?>">News</a>
       <a href="<?= url('tracker.php') ?>">Climate Tracker</a>
@@ -37,4 +42,4 @@ $user = current_user();
     </nav>
   </div>
 </header>
-<main>
+<main id="main">
