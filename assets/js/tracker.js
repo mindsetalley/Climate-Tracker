@@ -89,6 +89,7 @@
   }
 
   api.ready.then(d => {
+    document.getElementById('globeLoading')?.remove();
     if (!d) return;
     data = d;
     const list = document.getElementById('countryList');
