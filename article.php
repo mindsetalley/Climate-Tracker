@@ -30,6 +30,7 @@ if ($article['category_id']) {
 }
 
 $pageTitle = $article['title'];
+$metaDesc = excerpt($article['summary'] ?: $article['content'], 160);
 require __DIR__ . '/includes/header.php';
 ?>
 <article class="container article">
