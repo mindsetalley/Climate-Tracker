@@ -42,8 +42,8 @@ function initClimateGlobe(opts) {
     .onPolygonClick(d => { if (!opts.plain) select(iso(d)); });
 
   g.globeMaterial().color.set('#0f2a3d');
-  g.controls().autoRotate = opts.autoRotate !== false;
-  g.controls().autoRotateSpeed = 0.5;
+  const calm = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  g.controls().autoRotate = opts.autoRotate !== false && !calm;  g.controls().autoRotateSpeed = 0.5;
   if (opts.zoom === false) g.controls().enableZoom = false;
   el.addEventListener('pointerdown', () => { g.controls().autoRotate = false; });
 
