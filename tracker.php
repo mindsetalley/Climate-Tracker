@@ -25,12 +25,16 @@ require __DIR__ . '/includes/header.php';
   </div>
 
   <div class="tracker-grid">
-    <div id="globe" class="globe-box tall"></div>
-    <aside class="card" id="panel">
+    <div class="globe-wrap">
+    <div id="globe" class="globe-box tall" role="region" aria-label="Interactive 3D globe. Keyboard users can pick a country with the search box above."></div>
+    <p class="globe-loading" id="globeLoading">Loading globe…</p>
+  </div>    <aside class="card" id="panel">
       <h3>Pick a country</h3>
       <p class="mute">Click any coloured country on the globe, or search above.</p>
     </aside>
   </div>
+
+  <noscript><p class="alert">The interactive globe needs JavaScript. You can still browse every country on the <a href="<?= url('countries.php') ?>">countries page</a>.</p></noscript>
 
   <div class="legend">
     <?php foreach ($bands as [$lo, $hi]): [$label, $color] = score_level($lo); ?>
