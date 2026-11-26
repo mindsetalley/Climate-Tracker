@@ -19,6 +19,7 @@ $regions = array_map(fn($r) => ['lat' => (float)$r['lat'], 'lng' => (float)$r['l
 [$sl, $sbg, $sfg] = status_info($sp['conservation_status']);
 
 $pageTitle = $sp['name'];
+$metaDesc = $sp['name'] . ' (' . $sl . '): climate threats and where it lives.';
 require __DIR__ . '/includes/header.php';
 ?>
 <section class="container section">
