@@ -61,6 +61,7 @@ $score = $country['impact_score'] === null ? null : (int)$country['impact_score'
 [$label, $color] = score_level($score);
 
 $pageTitle = $country['name'] . ' – Climate Overview';
+$metaDesc = $country['name'] . ': climate vulnerability score, temperature, rainfall and what drives the risk.';
 require __DIR__ . '/includes/header.php';
 ?>
 <section class="container section">
