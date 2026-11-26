@@ -16,5 +16,7 @@ try {
         ]
     );
 } catch (PDOException $e) {
-    die('Database connection failed: ' . $e->getMessage());
+    error_log('DB connection failed: ' . $e->getMessage());
+    http_response_code(503);
+    exit('The site is temporarily unavailable. Please try again later.');
 }
