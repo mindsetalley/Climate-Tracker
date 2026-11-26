@@ -20,6 +20,25 @@ $spotlight = $pdo->query(
      ORDER BY FIELD(conservation_status,'CR','EN','VU','NT','LC','EW','EX'), RAND() LIMIT 4"
 )->fetchAll();
 
+// Snapshot figures computed from imported data
+$maxY = (int)$pdo->query("SELECT MAX(year) FROM climate_data WHERE indicator = 'avg_temp_c'")->fetchColumn();
+$warming = null;
+if ($maxY) {
+    $from = $maxY - 9;
+    $warming = $pdo->query(
+        "SELECT AVG(r.v - b.v) FROM
+           (SELECT country_id, AVG(value) v FROM climate_data
+            WHERE indicator = 'avg_temp_c' AND year BETWEEN $from AND $maxY GROUP BY country_id) r
+         JOIN
+           (SELECT country_id, AVG(value) v FROM climate_data
+            WHERE indicator = 'avg_temp_c' AND year BETWEEN 1950 AND 1959 GROUP BY country_id) b
+         USING (country_id)"
+    )->fetchColumn();
+}
+$scored    = (int)$pdo->query('SELECT COUNT(*) FROM countries WHERE impact_score IS NOT NULL')->fetchColumn();
+$highCount = (int)$pdo->query('SELECT COUNT(*) FROM countries WHERE impact_score > 60')->fetchColumn();
+$topCountry = $pdo->query('SELECT name, iso_a3, impact_score FROM countries WHERE impact_score IS NOT NULL ORDER BY impact_score DESC, name LIMIT 1')->fetch();
+
 require __DIR__ . '/includes/header.php';
 ?>
 
@@ -45,65 +64,25 @@ require __DIR__ . '/includes/header.php';
 <?php endif; ?>
 
 <section class="container section">
-  <h2>Global Climate Snapshot</h2>
+<h2>Climate Snapshot</h2>
   <div class="stats">
-    <div class="stat"><span class="num">+1.2°C</span><span>Temperature anomaly</span></div>
-    <div class="stat"><span class="num">+10 cm</span><span>Sea-level rise since 1993</span></div>
-    <div class="stat"><span class="num">37 Gt</span><span>Annual CO₂ emissions</span></div>
-    <div class="stat"><span class="num">10 M ha</span><span>Yearly forest loss</span></div>
-  </div>
-  <p class="note">Placeholder figures. We'll replace these with real data later.</p>
-</section>
-
-<section class="container section globe-teaser">
-  <h2>Interactive Globe</h2>
-  <div id="globePreview" class="globe-box"></div>
-    <a class="btn" href="<?= url('tracker.php') ?>">Open full tracker</a>
-</section>
-
-<?php if ($spotlight): ?>
-<section class="container section">
-  <h2>Threatened Species</h2>
-  <div class="species-grid">
-    <?php foreach ($spotlight as $s) include __DIR__ . '/includes/species_card.php'; ?>
-  </div>
-  <p><a href="<?= url('species.php') ?>">See all species →</a></p>
-</section>
-<?php endif; ?>
-
-<section class="container section">
-  <h2>Latest Climate News</h2>
-  <?php if (!$latest): ?>
-    <p>No articles yet.</p>
-  <?php else: ?>
-    <div class="cards">
-      <?php foreach ($latest as $a): ?>
-        <article class="card">
-          <?php if ($a['image_url']): ?>
-            <img src="<?= e($a['image_url']) ?>" alt="">
-          <?php endif; ?>
-          <div class="card-body">
-            <span class="tag"><?= e($a['category'] ?? 'Uncategorised') ?></span>
-            <h3><a href="<?= url('article.php?slug=' . urlencode($a['slug'])) ?>"><?= e($a['title']) ?></a></h3>
-            <p><?= e($a['summary']) ?></p>
-            <small><?= date('j M Y', strtotime($a['published_at'])) ?></small>
-          </div>
-        </article>
-      <?php endforeach; ?>
+    <div class="stat">
+      <span class="num"><?= $warming !== null ? ($warming >= 0 ? '+' : '') . number_format((float)$warming, 1) . ' °C' : '—' ?></span>
+      <span>Average land warming across countries (<?= $maxY ? ($maxY - 9) . '–' . $maxY : 'latest 10 years' ?> vs 1950–1959)</span>
     </div>
-  <?php endif; ?>
-</section>
-
-<script src="https://cdn.jsdelivr.net/npm/globe.gl@2.27.2/dist/globe.gl.min.js"></script>
-<script src="<?= url('assets/js/globe.js') ?>"></script>
-<script>
-  initClimateGlobe({
-    el: document.getElementById('globePreview'),
-    geoUrl: <?= json_encode(url('assets/data/countries.geojson')) ?>,
-    apiUrl: <?= json_encode(url('api/countries.php')) ?>,
-    zoom: false,   // don't hijack page scrolling
-    onSelect: code => { location.href = <?= json_encode(url('tracker.php?country=')) ?> + code; }
-  });
-</script>
-
-<?php require __DIR__ . '/includes/footer.php'; ?>
+    <div class="stat">
+      <span class="num"><?= $highCount ?></span>
+      <span>of <?= $scored ?> countries in the High or Very High vulnerability bands</span>
+    </div>
+    <?php if ($topCountry): ?>
+    <div class="stat">
+      <span class="num"><a href="<?= url('country.php?iso=' . urlencode($topCountry['iso_a3'])) ?>"><?= e($topCountry['name']) ?></a></span>
+      <span>Most vulnerable country in the dataset (score <?= (int)$topCountry['impact_score'] ?>)</span>
+    </div>
+    <?php endif; ?>
+    <div class="stat">
+      <span class="num">1995–2024</span>
+      <span>Years of vulnerability data on the <a href="<?= url('tracker.php') ?>">globe timeline</a></span>
+    </div>
+  </div>
+  <p class="note">Warming is the equal-weighted average of each country's national land temperature change, so small and large countries count the same. It is not the same as the global mean temperature anomaly published by NASA or the Met Office, which includes oceans. Vulnerability comes from the ND-GAIN index (see <a href="<?= url('about.php#methodology') ?>">methodology</a>).</p>
