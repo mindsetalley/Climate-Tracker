@@ -1,0 +1,3 @@
+Options -Indexes
+ErrorDocument 404 /climate-tracker/404.php
+RedirectMatch 403 ^/climate-tracker/(config|includes|scripts|sql|data)/
