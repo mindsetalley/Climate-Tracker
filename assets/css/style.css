@@ -216,3 +216,7 @@
 .cmp td:first-child { font-weight: 600; }
 .cmp th, .cmp td { min-width: 130px; }
 .filters + .note, .filters + .table-wrap { margin-top: 8px; }
+
+.stat .num a { color: inherit; }
+.stat .num { overflow-wrap: anywhere; line-height: 1.15; }
+.stat > span:last-child { margin-top: 6px; font-size: 0.9rem; color: var(--muted); }
